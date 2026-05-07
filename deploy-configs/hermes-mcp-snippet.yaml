@@ -1,0 +1,15 @@
+# Append/merge into /opt/data/config.yaml on fly machine `rivetta`.
+# This makes hermes discover ouroboros as an MCP tool provider.
+
+mcp_servers:
+  ouroboros:
+    command: ouroboros
+    args:
+      - mcp
+      - serve
+      - --transport
+      - stdio
+      - --llm-backend
+      - codex
+    timeout: 300
+    connect_timeout: 60

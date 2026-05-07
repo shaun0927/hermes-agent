@@ -52,12 +52,18 @@ RUN chmod -R a+rX /opt/hermes
 # If HERMES_UID is unset, the entrypoint drops to the default hermes user (10000).
 
 # ---------- Python virtualenv ----------
-RUN uv venv && \
-    uv pip install --no-cache-dir -e ".[all]"
+RUN uv venv --seed && \
+    uv pip install --no-cache-dir -e ".[all]" && \
+    .venv/bin/python -m pip install --no-cache-dir --pre ouroboros-ai==0.33.1.dev132 && \
+    npm install -g @openai/codex && \
+    npm install -g oh-my-codex && \
+    ln -sf /opt/hermes/.venv/bin/hermes /usr/local/bin/hermes && \
+    ln -sf /opt/hermes/.venv/bin/hermes-agent /usr/local/bin/hermes-agent && \
+    ln -sf /opt/hermes/.venv/bin/ouroboros /usr/local/bin/ouroboros
 
 # ---------- Runtime ----------
 ENV HERMES_WEB_DIST=/opt/hermes/hermes_cli/web_dist
 ENV HERMES_HOME=/opt/data
-ENV PATH="/opt/data/.local/bin:${PATH}"
+ENV PATH="/opt/hermes/.venv/bin:/opt/data/.local/bin:${PATH}"
 VOLUME [ "/opt/data" ]
 ENTRYPOINT [ "/usr/bin/tini", "-g", "--", "/opt/hermes/docker/entrypoint.sh" ]

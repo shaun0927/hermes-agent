@@ -1,0 +1,48 @@
+app = "rivetta"
+primary_region = "nrt"
+
+[build]
+  dockerfile = "Dockerfile"
+
+[env]
+  HERMES_HOME = "/opt/data"
+  HERMES_CONTAINER = "1"
+  HERMES_ACCEPT_HOOKS = "1"
+  HERMES_SKIP_NODE_BOOTSTRAP = "1"
+  HERMES_INFERENCE_PROVIDER = "openai-codex"
+  HERMES_INFERENCE_MODEL = "gpt-5.3-codex"
+  API_SERVER_ENABLED = "true"
+  API_SERVER_HOST = "0.0.0.0"
+  API_SERVER_PORT = "18790"
+  WEBHOOK_ENABLED = "false"
+  PRIMARY_REGION = "nrt"
+
+[[mounts]]
+  source = "nanobot_data"
+  destination = "/opt/data"
+
+[processes]
+  app = "gateway run --accept-hooks --replace"
+
+[[services]]
+  protocol = "tcp"
+  internal_port = 18790
+  auto_stop_machines = "off"
+  auto_start_machines = true
+  min_machines_running = 1
+  processes = ["app"]
+
+  [[services.ports]]
+    port = 80
+    handlers = ["http"]
+    force_https = true
+
+  [[services.ports]]
+    port = 443
+    handlers = ["tls", "http"]
+
+  [[services.http_checks]]
+    interval = "15s"
+    timeout = "5s"
+    method = "GET"
+    path = "/health"

@@ -1,0 +1,10 @@
+# Append/merge into /opt/data/.codex/config.toml on fly machine `rivetta`.
+# This makes Codex CLI (and therefore omx, which wraps codex) discover
+# ouroboros as a native MCP tool — so omx agents can call ouroboros
+# functions like ouroboros_interview / ouroboros_execute_seed without
+# falling back to shelling out.
+
+[mcp_servers.ouroboros]
+command = "ouroboros"
+args = ["mcp", "serve", "--transport", "stdio", "--llm-backend", "codex"]
+startup_timeout_sec = 60
