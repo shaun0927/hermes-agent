@@ -54,7 +54,7 @@ RUN chmod -R a+rX /opt/hermes
 # ---------- Python virtualenv ----------
 RUN uv venv --seed && \
     uv pip install --no-cache-dir -e ".[all]" && \
-    .venv/bin/python -m pip install --no-cache-dir --pre ouroboros-ai==0.33.1.dev132 && \
+    .venv/bin/python -m pip install --no-cache-dir --pre ouroboros-ai==0.35.1.dev23 && \
     npm install -g @openai/codex && \
     npm install -g oh-my-codex && \
     ln -sf /opt/hermes/.venv/bin/hermes /usr/local/bin/hermes && \
